@@ -47,8 +47,29 @@ This breaks the usual AI sycophancy. The characters don't exist just to cater to
 ---
 
 ## 🧠 How It Works Under the Hood (The Architecture)
+### Why Use 6 Agents? 
 
-Rather than forcing a single LLM to think in a linear, biased chain, the proxy uses **Staggered Concurrent Execution** to mimic the human brain's non-sequential, parallel processing. By separating these functions, it prevents later cognitive steps from biasing the raw, initial reactions.
+Running six separate API calls per turn is undeniably expensive. If you are roleplaying with a long chat history, this architecture will easily cost you six times more in API credits than a standard single-prompt setup. 
+
+However, standard LLM roleplay suffers from three fundamental architectural flaws that cannot be fixed within a single prompt:
+
+#### 1. The "Linear Contamination" Problem
+When a single LLM does all its thinking in one linear text block (like a standard `<think>` block), **early tokens ruthlessly bias later tokens.** 
+If the AI’s brain writes *"I feel terrified"* in the first sentence of its thought process, the entire rest of its cognitive analysis is instantly warped by that fear. It cannot objectively analyze its long-term goals (Dopamine) or the user's intent (Theory of Mind) because the neural network has already locked onto "fear" as the dominant context. 
+
+By separating the subconscious into independent, isolated agents (Somatic, Neuro, ToM, DMN), we prevent this contamination. The Somatic core can scream *"I am tensing up in panic,"* while the Neurochemical engine coolly calculates *"My pride is intact and my goals haven't changed."* 
+
+#### 2. Simulating True Cognitive Dissonance
+Real humans are messy, contradictory, and constantly at war with themselves. We want to run away, but our pride makes us stand our ground. We hate someone, but we desperately want their approval. 
+
+**Single-prompt LLMs are terrible at holding contradictions.** Because they are trained to write cohesive, logical paragraphs, they will always try to "smooth out" their thoughts to make them agree. 
+
+By running Agents 2, 3, and 4 in completely isolated parallel streams, we force the AI to generate raw, uncooperative, and highly contradictory data. This is the only way to simulate true **cognitive dissonance**. When Agent 5 (the Executive) gathers this data, it is forced to make a messy, flawed human choice between competing internal voices.
+
+#### 3. Enforcing the "Show, Don't Tell" Firewall
+If a single LLM writes both the character's internal thoughts and their external dialogue in one pass, the thoughts will inevitably "bleed" into the dialogue. The character will start acting exactly like they feel, destroying all subtext and conversational masking. 
+
+To prevent this, **Agent 6 (the Writer) is kept 100% blind to the raw thoughts of Agents 1-4.** It only receives the final, physical choreography and dialogue dictated by Agent 5. This strict firewall forces the AI to act like a real movie camera—describing only literal, physical reality and forcing the emotional subtext to be shown, not told.
 
 ```
 [ST Chat History] 
