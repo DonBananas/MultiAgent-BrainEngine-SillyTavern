@@ -121,5 +121,5 @@ To prevent characters from reading each other's minds (Telepathy) and to stop th
 
 ---
 
-## 🔄 Background Tasks (State Management)
+## 🔄 Background tasks
 While sending the reply back to SillyTavern, the server runs quick background tasks to update the character's conversational fatigue and save their active schedules. It also uses thread-safe locking to ensure multiple characters in a group chat never corrupt your local memory file.
