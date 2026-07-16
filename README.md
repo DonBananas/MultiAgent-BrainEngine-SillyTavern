@@ -50,7 +50,7 @@ This breaks the usual AI sycophancy. The characters don't exist just to cater to
 
 ## 🌍 The "Setting" Bypass (Your Omniscient Sandbox)
 
-If you create a character card in SillyTavern named exactly **Setting**, the Python script will recognize it and automatically bypass the 6-agent biopsychosocial brain. 
+If you create a character card in SillyTavern named exactly **Setting** , the Python script will recognize it and automatically bypass the 6-agent biopsychosocial brain. 
 
 Instead of treating "Setting" like a human, the script treats it as an **Omniscient Narrator**. It takes the raw, unedited chat history—containing the hidden `<think>` blocks, schedules, and emotions of *every single character* in the chat—and feeds it directly to the Setting. 
 
