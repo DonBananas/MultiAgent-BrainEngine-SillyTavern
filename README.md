@@ -68,7 +68,7 @@ By running Agents 2, 3, and 4 in completely isolated parallel streams, we force 
 ### 3. Enforcing the "Show, Don't Tell" Firewall (The Social Mask)
 If a single LLM writes both a character's internal thoughts and their external dialogue in one pass, the thoughts will inevitably "bleed" into the dialogue. The character will start acting exactly like they feel, destroying all subtext, mystery, and conversational masking.
 
-In reality, our external behavior (motor cortex and speech centers) does not broadcast our raw neurochemical soup. Humans are masters of masking. If we feel an meotion, our actions don't necessarily reveal it through subtext like it would happne in a novel. Unless our emotions are very strong, we can hide them. For very emotional and hard situation, there are specific methods I've implemented but they still act upon on a different layer than the external actions, affecting it indirectly. Real life is not a novel.
+In reality, our external behavior (motor cortex and speech centers) does not broadcast our raw neurochemical soup. Humans are masters of masking. If we feel an meotion, our actions don't necessarily reveal it through subtext like it would happne in a novel. Unless our emotions are very strong, we can hide them. For very emotional and hard situation, there are specific methods I've implemented but they still act  on a different layer than the external actions, affecting it indirectly. Real humans are not characters in a novel.
 
 ---
 
