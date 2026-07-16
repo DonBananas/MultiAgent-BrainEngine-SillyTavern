@@ -46,7 +46,7 @@ This breaks the usual AI sycophancy. The characters don't exist just to cater to
 
 ---
 
-### Why Use 6 Agents? 
+##  Why Use 6 Agents? 
 
 Running six separate API calls per turn is undeniably expensive. If you are roleplaying with a long chat history, this architecture will easily cost you six times more in API credits than a standard single-prompt setup. 
 
