@@ -35,7 +35,7 @@ This breaks the usual AI sycophancy. The characters don't exist just to cater to
    Once the terminal is open, install the requirements by typing the line below, then press Enter: 
    ```bash
    pip install -r requirements.txt
-4.  Open `server.py` in a text editor and put your API Key, Model Name, and Provider URL at the top where it says `INSERT_YOUR_...`.
+4.  Open `server.py` in a text editor and put your API Key, Model Name, and Provider URL at the top where it says `INSERT_YOUR_...` OPTIONAL: *there's an option for a dual API provider setup, it's explained inside server.py.* 
 5.  To run the server: Double click `start_server.bat` (or run `python server.py` in your terminal).
 6.  Open SillyTavern. Go to the **API Connections** tab (the plug icon).
 7.  Select **Chat Completion** -> **Custom (OpenAI-compatible)**.
@@ -154,8 +154,6 @@ To prevent characters from reading each other's minds (Telepathy) and to stop th
 
 ## 🔄 Background tasks
 While sending the reply back to SillyTavern, the server runs quick background tasks to update the character's conversational fatigue and save their active schedules. It also uses thread-safe locking to ensure multiple characters in a group chat never corrupt your local memory file.
-
-There's an option for a **dual provider setting** in server.py, this can be used to save up on money by assigning a cheaper key to the Subconscious Agents (1-4), while using the main API key for Agents 5-6.
 
 ## Known issues
 If the API call is rejected for unsafe content by your chosen provider, the Agents will output  placeholders. With less moderated models,  this usually affect only  1 or 2 agents, dialogue is usually always generated. Still, this will  negatively affect the quality of the chat. More censored models may block more agents and dialogue.
