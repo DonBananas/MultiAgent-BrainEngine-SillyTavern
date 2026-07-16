@@ -15,12 +15,13 @@ app = FastAPI()
 # ⚠️ USER: INSERT YOUR API CREDENTIALS AND MODELS HERE ⚠️
 
 # --- MAIN SETTINGS (Required) ---
+# Used for Agent 5 (Decision Making) and Agent 6 (Writing)
 API_KEY = "INSERT_YOUR_API_KEY_HERE" 
 MODEL_NAME = "INSERT_YOUR_MODEL_NAME_HERE"      # e.g., "anthropic/claude-3.5-sonnet"
 BASE_URL = "INSERT_YOUR_PROVIDER_URL_HERE"      # e.g., "https://openrouter.ai/api/v1"
 
 # --- ADVANCED: DUAL-PROVIDER SETUP (Optional, saves money) ---
-# Want to run the backend logic (Agents 1-5) on a cheap or free local model?
+# Want to run the backend logic (Agents 1-4) on a cheap or free local model?
 # Put those credentials here. 
 # IF YOU LEAVE THESE BLANK (""), THE SCRIPT WILL JUST USE YOUR MAIN SETTINGS FOR EVERYTHING!
 LOGIC_API_KEY = ""   # e.g., "lm-studio" for local, or an OpenRouter key
@@ -40,49 +41,65 @@ ACTIVE_LOGIC_MODEL = LOGIC_MODEL if LOGIC_MODEL.strip() != "" else MODEL_NAME
 logic_client = AsyncOpenAI(base_url=active_logic_url, api_key=active_logic_api)
 
 STATE_DB_FILE = "biopsychosocial_state.json"
-state_lock = threading.Lock()  # Added to prevent file corruption from race conditions
+state_lock = threading.Lock()  # Unified lock to prevent background task collisions
 
 # =========================================================
-# BULLETPROOF JSON PARSING & STATE MANAGEMENT
+# BULLETPROOF JSON PARSING & STATE MANAGEMENT (FIXED LCOKS)
 # =========================================================
-def load_all_states():
-    with state_lock:
-        if os.path.exists(STATE_DB_FILE):
-            try:
-                with open(STATE_DB_FILE, "r", encoding="utf-8") as f:
-                    return json.load(f)
-            except Exception:
-                return {}
+def _load_raw_unlocked():
+    """Internal helper: Reads the file without triggering locks"""
+    if os.path.exists(STATE_DB_FILE):
+        try:
+            with open(STATE_DB_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except json.JSONDecodeError:
+            print("⚠️ STATE DB CORRUPTED! Preventing overwrite. Returning None.")
+            return None # Return None instead of {} to prevent wiping the database on crash
+        except Exception as e:
+            print(f"⚠️ STATE DB READ ERROR: {e}")
+            return None
     return {}
 
-def save_all_states(states):
-    with state_lock:
+def _save_raw_unlocked(states):
+    """Internal helper: Writes to the file without triggering locks"""
+    if states is not None:
         with open(STATE_DB_FILE, "w", encoding="utf-8") as f:
             json.dump(states, f, indent=4)
 
+def load_all_states():
+    with state_lock:
+        data = _load_raw_unlocked()
+        return data if data is not None else {}
+
 def get_current_state(character_name="default"):
-    states = load_all_states()
-    return states.get(character_name, {
-        "character_name": character_name,
-        "cognitive_fatigue": 20,
-        "last_known_dmn_daily": "08:00 AM - Wake up, 09:00 AM - 05:00 PM - Work.",
-        "last_known_dmn_weekly": "Standard weekly routine."
-    })
+    with state_lock:
+        states = _load_raw_unlocked()
+        if states is None: states = {}
+        
+        return states.get(character_name, {
+            "character_name": character_name,
+            "cognitive_fatigue": 20,
+            "last_known_dmn_daily": "08:00 AM - Wake up, 09:00 AM - 05:00 PM - Work.",
+            "last_known_dmn_weekly": "Standard weekly routine."
+        })
 
 def update_state_memory(char_name, daily_sched, weekly_sched):
-    states = load_all_states()
-    state = states.get(char_name, {"character_name": char_name, "cognitive_fatigue": 20})
-    
-    default_daily = "08:00 AM - Wake up, 09:00 AM - 05:00 PM - Work."
-    default_weekly = "Standard weekly routine."
-    
-    if daily_sched and daily_sched != default_daily:
-        state["last_known_dmn_daily"] = daily_sched
-    if weekly_sched and weekly_sched != default_weekly:
-        state["last_known_dmn_weekly"] = weekly_sched
+    with state_lock: # LOCK HELD FOR ENTIRE READ-MODIFY-WRITE
+        states = _load_raw_unlocked()
+        if states is None: return # Abort if DB is currently corrupted
         
-    states[char_name] = state
-    save_all_states(states)
+        state = states.get(char_name, {"character_name": char_name, "cognitive_fatigue": 20})
+        
+        default_daily = "08:00 AM - Wake up, 09:00 AM - 05:00 PM - Work."
+        default_weekly = "Standard weekly routine."
+        
+        if daily_sched and daily_sched != default_daily:
+            state["last_known_dmn_daily"] = daily_sched
+        if weekly_sched and weekly_sched != default_weekly:
+            state["last_known_dmn_weekly"] = weekly_sched
+            
+        states[char_name] = state
+        _save_raw_unlocked(states)
 
 def clean_json_string(raw_string):
     if not raw_string:
@@ -352,20 +369,33 @@ async def staggered_call(coro, delay_seconds):
 
 async def update_cognitive_load(char_name, arousal, valence):
     print("🔄 [BACKGROUND] Updating Cognitive Fatigue...")
-    state = get_current_state(char_name)
-    fatigue = state.get("cognitive_fatigue", 20)
     
-    if arousal >= 7.5 or valence.lower() == "negative":
-        fatigue += 15
-    elif arousal <= 4.0 and valence.lower() == "positive":
-        fatigue -= 20
-    else:
-        fatigue -= 5 
-        
-    fatigue = max(0, min(100, fatigue))
-    state["cognitive_fatigue"] = fatigue
-    save_all_states({**load_all_states(), char_name: state})
-    print(f"✅ [BACKGROUND] {char_name} Fatigue is now {fatigue}/100")
+    def sync_update_fatigue():
+        with state_lock: # LOCK HELD FOR ENTIRE READ-MODIFY-WRITE
+            states = _load_raw_unlocked()
+            if states is None: return None # Abort if DB is corrupted
+            
+            state = states.get(char_name, {"character_name": char_name, "cognitive_fatigue": 20})
+            fatigue = state.get("cognitive_fatigue", 20)
+            
+            if arousal >= 7.5 or valence.lower() == "negative":
+                fatigue += 15
+            elif arousal <= 4.0 and valence.lower() == "positive":
+                fatigue -= 20
+            else:
+                fatigue -= 5 
+                
+            fatigue = max(0, min(100, fatigue))
+            state["cognitive_fatigue"] = fatigue
+            
+            states[char_name] = state
+            _save_raw_unlocked(states)
+            return fatigue
+            
+    # Run the locked sync function safely in the background thread
+    final_fatigue = await asyncio.to_thread(sync_update_fatigue)
+    if final_fatigue is not None:
+        print(f"✅ [BACKGROUND] {char_name} Fatigue is now {final_fatigue}/100")
 
 @app.get("/v1/models")
 async def get_models():
@@ -505,6 +535,7 @@ async def chat_completions(request: Request, background_tasks: BackgroundTasks):
     dmn_daily_schedule = safe_get(a4_data, "current_daily_schedule", "08:00 AM - Wake up, 09:00 AM - 05:00 PM - Work.")
     dmn_weekly_routine = safe_get(a4_data, "weekly_routine_draft", "Standard weekly routine.")
 
+    # FastAPI Background task 1: Update schedule
     background_tasks.add_task(update_state_memory, char_name, dmn_daily_schedule, dmn_weekly_routine)
 
     # =========================================================
@@ -524,7 +555,8 @@ async def chat_completions(request: Request, background_tasks: BackgroundTasks):
     """
     
     msg_5 = build_agent_messages(messages_mind, AGENT_5_EXECUTIVE, additional_context=executive_context, is_json=True)
-    res_5 = await async_llm_call(full_messages=msg_5, temp=agent_temp, pres_pen=0.4)
+    # MODIFICATION: Added is_writer=True to route Agent 5 to the main/expensive provider
+    res_5 = await async_llm_call(full_messages=msg_5, temp=agent_temp, pres_pen=0.4, is_writer=True)
     
     a5_data = parse_or_fallback(res_5, {
         "hijack_occurred": False, 
@@ -582,6 +614,7 @@ async def chat_completions(request: Request, background_tasks: BackgroundTasks):
     
     thought_block = f"<think>\n🩸 Somatic: {valence}, Arousal {arousal}/10\n🧪 Neuro: Emotion [{core_emotion}] | Schema [{schema_trigger}]\n👁️ ToM: Intent [{tom_intent}] | User Subtext [{tom_subtext}]\n🌫️ DMN: {dmn_thought} | Today: {dmn_daily_schedule} | Week: {dmn_weekly_routine}\n⚖️ Exec (Fatigue {fatigue}): Motive [{internal_motive}] | Strategy [{subtext_strategy}]\n🎬 Directing: Speech [{speech_intent}] | Choreo [{physical_choreography}]\n</think>\n\n"
     
+    # FastAPI Background task 2: Update fatigue
     background_tasks.add_task(update_cognitive_load, char_name, arousal, valence)
     
     return {
