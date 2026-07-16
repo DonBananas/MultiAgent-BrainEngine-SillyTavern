@@ -31,9 +31,11 @@ This breaks the usual AI sycophancy. The characters don't exist just to cater to
 
 1.  Install Python (Make sure to check "Add Python to PATH" during installation).
 2.  Download and extract the folder to your computer.
-3.  Open a terminal inside the folder and install the requirements by running: 
+3.  Open a terminal inside the folder (right-click on any empty white space inside the folder andSelect "Open in Terminal" from the menu).
+(Note: A black or blue command window will pop up. If you don't see "Open in Terminal", you can also just click the folder's address bar at the very top, type cmd, and press Enter). and install the requirements by typing: 
     ```bash
     pip install -r requirements.txt
+Press enter and allow the installation to complete.
     ```
 4.  Open `server.py` in a text editor and put your API Key, Model Name, and Provider URL at the top where it says `INSERT_YOUR_...`.
 5.  To run the server: Double click `start_server.bat` (or run `python server.py` in your terminal).
