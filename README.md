@@ -26,21 +26,24 @@ It features dual-stream memory, ego-depletion/fatigue tracking, and active backg
 
 ## 🧠 How It Works Under the Hood (The Architecture)
 
-Rather than forcing a single LLM to think in a linear, biased chain, the proxy uses **Asynchronous Staggered Execution** to mimic the human brain's non-sequential, parallel processing. By separating these functions, it prevents later cognitive steps from biasing the raw, initial reactions. The thought process is broken down into 3 distinct phases:
+Rather than forcing a single LLM to think in a linear, biased chain, the proxy uses **Asynchronous Staggered Execution** to mimic the human brain's non-sequential, parallel processing. By separating these functions, it prevents later cognitive steps from biasing the raw, initial reactions. The thought process is broken down into 4 distinct phases:
 
-### Phase 1: The Subconscious (Concurrent Execution)
-*   **Agent 1 (Somatic Core):** Runs first. It reads the user's prompt and determines the character's raw physical reaction (Heart rate, muscle tension, valence, and arousal).
+### Phase 1: The Physiological Trigger
+*   **Agent 1 (Somatic Core):** Runs first. It reads the user's prompt and determines the character's raw physical reaction (heart rate, muscle tension, valence, and arousal). Just like human biology, the nervous system reacts before the brain processes what is happening.
+
+### Phase 2: The Subconscious (Concurrent Execution)
 *   *As soon as A1 finishes, the script feeds that bodily data into three other agents and runs them at the exact same time so they cannot bias one another:*
-    *   **Agent 2 (Neurochemical):** Calculates dopamine drives, ego (serotonin), bonding (oxytocin), and filters the scene through a core schema.
+    *   **Agent 2 (Neurochemical):** Calculates dopamine drives, ego (serotonin), bonding (oxytocin), and filters the scene through a core schema based on the physical arousal.
     *   **Agent 3 (Theory of Mind):** Reads between the lines of what the user is doing. Attempts to guess the user's hidden subtext and calculates the power dynamic.
     *   **Agent 4 (Default Mode Network):** Completely ignores the user and focuses on the character's background life. It generates an intrusive thought, updates their hour-by-hour daily schedule, and drafts their weekly routine.
 
-### Phase 2: The Executive Director
-*   **Agent 5 (Executive Cortex):** Gathers all the independent JSON data from Phase 1, plus the character's current **Cognitive Fatigue**. It looks at all the contradictory subconscious data and makes a tactical decision: *What is my actual motive? Am I going to speak, or just stay silent? What is my physical choreography?*
+### Phase 3: The Executive Director
+*   **Agent 5 (Executive Cortex):** Gathers all the independent JSON data from Phases 1 and 2, plus the character's current **Cognitive Fatigue**. It looks at all the contradictory subconscious data and makes a tactical decision: *What is my actual motive? Am I going to speak, or just stay silent? What is my physical choreography?*
 *   *(If Cognitive Fatigue or Arousal is too high, Agent 5 suffers an "Ego Depletion Hijack" and loses control of their manners).*
 
-### Phase 3: The Synthesis (The Camera)
+### Phase 4: The Synthesis (The Camera)
 *   **Agent 6 (Screenwriter):** Takes the final directions from Agent 5. **Agent 6 is completely blind to the thoughts of Agents 1-4.** This is done intentionally so the AI cannot write flowery, poetic internal narration. Agent 6 is strictly forced to translate Agent 5's strategy into macroscopic stage directions, props, proxemics, and punchy dialogue. 
 
 ### Background Tasks (Memory Engine)
-While Phase 3 is returning the text to SillyTavern, the script quietly runs background tasks to save the character's updated Cognitive Fatigue (which rises and falls based on the stress of the conversation) and their updated DMN schedule into a local `biopsychosocial_state.json` file so it remembers it for the next turn.
+While Phase 4 is returning the text to SillyTavern, the script quietly runs background tasks to save the character's updated Cognitive Fatigue (which rises and falls based on the stress of the conversation) and their updated DMN schedule into a local `biopsychosocial_state.json` file so it remembers it for the next turn.
+ script q (which rises and falls based on the stress of the conversation) and their updated DMN schedule into a local `biopsychosocial_state.json` file so it remembers it for the next turn.
