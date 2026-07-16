@@ -79,7 +79,8 @@ In the human brain, cognitive processing is a cascade, not a straight line. Befo
 
 Our script replicates this exact biological sequence:
 1.  **The Amygdala (Agent 1) fires first and fast.** It reads the scene and determines raw physical arousal (heart rate, tensing, breathing). 
-2.  **The Subconscious Channels (Agents 2, 3, and 4) receive this physical context.** Just like a real human, their thoughts are *colored* by their physical arousal (e.g., high arousal tenses their Theory of Mind and makes their DMN more anxious). 
+2.  **The Subconscious Channels** (Agents 2, 3, and 4) receive this physical context. Just like a real human, their thoughts are *colored* by their physical arousal (e.g., high arousal tenses their Theory of Mind and makes their DMN more anxious).
+3.  **Planning and action**: the last steps are planning and action, this is where Agent 5 and 6 come.
 
 #### 2. Preventing domain contamination
 While Agents 2, 3, and 4 are all influenced by the Somatic core (A1), **they are kept completely blind to each other's thoughts.** 
@@ -89,12 +90,8 @@ In a standard single-prompt LLM, different cognitive domains contaminate each ot
 *   By separating these domains into isolated streams, the **DMN** can worry about its chores, the **Theory of Mind** can analyze social vulnerabilities, and the **Neurochemical Engine** can calculate ego and drives. They all feel the somatic tension (A1), but they process it in their own specialized domains without polluting one another.
 *   In a real brain, subconsicous thoughts involve different regions that act simultaneously, not sequentially.
 
-#### 3. Simulating real cognitive dissonance
-Because Agents 2, 3, and 4 process the scene independently, they often produce highly contradictory data. Your Theory of Mind might say *"the user is vulnerable and needs comfort,"* while your Neurochemical Engine says *"my pride is wounded and I want to strike back."*
-
-Standard LLMs hate contradiction; they are trained to write cohesive, agreeable paragraphs and will always try to "smooth out" these differences. 
-
-By keeping the subconscious agents isolated, we force the AI to generate raw, uncooperative and highly contradictory data. When Agent 5 (the Executive) gathers this data, it is forced to resolve actual **cognitive dissonance**—making a messy, deeply human decision between competing internal voices.
+#### 3. Breaking down tasks into smaller parts
+If you tell a sinlge LLM to analyze a situation, generate a reaction, filter it through a character's values, propose actons and generate dialogue you wil get subpare results. LLMs response decrase in quality the more complex their insturctionos are. Breaking down Breaking down the instructions to different agents addresses this issue. Each Agent is focused on a specific task whihc allows them to perform it at their best.
 
 #### 4. Enforcing  "show, don't Tell"
 If a single LLM writes both the character's internal thoughts and their external dialogue in one pass, the thoughts will inevitably "bleed" into the dialogue. The character will start acting exactly like they feel, destroying any subtext or masking.
