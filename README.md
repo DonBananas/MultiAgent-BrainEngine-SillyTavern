@@ -1,4 +1,5 @@
 # MultiAgent-BrainEngine-SillyTavern
+**[CLICK TO DOWNLOAD MultiAgent BrainEngine](https://github.com/DonBananas/MultiAgent-BrainEngine-SillyTavern/archive/refs/heads/main.zip)** - Read "How to Install & Use" section.
 
 ### Stop roleplaying with puppets. Give them a mind and a life.
 
@@ -23,8 +24,6 @@ I also wanted to cure the AI's tendency to wait around in a void. Through the De
 *   **A weekly calendar:** They know what their obligations are tomorrow, on Thursday, or over the weekend.
 
 This breaks the usual AI sycophancy. The characters don't exist just to cater to you; they have a complex inner world and they have somewhere to be. You are simply stepping into a scene in progress.
-
-**[CLICK TO DOWNLOAD MultiAgent BrainEngine](https://github.com/DonBananas/MultiAgent-BrainEngine-SillyTavern/archive/refs/heads/main.zip)**
 
 ---
 
