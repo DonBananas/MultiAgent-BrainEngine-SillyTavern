@@ -155,6 +155,8 @@ To prevent characters from reading each other's minds (Telepathy) and to stop th
 ## 🔄 Background tasks
 While sending the reply back to SillyTavern, the server runs quick background tasks to update the character's conversational fatigue and save their active schedules. It also uses thread-safe locking to ensure multiple characters in a group chat never corrupt your local memory file.
 
+There's an option for a **dual provider setting** in server.py, this can be used to save up on money by assigning a cheaper key to the Subconscious Agents (1-4), while using the main API key for Agents 5-6.
+
 ## Known issues
 If the API call is rejected for unsafe content by your chosen provider, the Agents will output  placeholders. With less moderated models,  this usually affect only  1 or 2 agents, dialogue is usually always generated. Still, this will  negatively affect the quality of the chat. More censored models may block more agents and dialogue.
 
