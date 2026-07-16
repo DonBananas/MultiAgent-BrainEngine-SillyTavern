@@ -46,7 +46,6 @@ This breaks the usual AI sycophancy. The characters don't exist just to cater to
 
 ---
 
-## 🧠 How It Works Under the Hood (The Architecture)
 ### Why Use 6 Agents? 
 
 Running six separate API calls per turn is undeniably expensive. If you are roleplaying with a long chat history, this architecture will easily cost you six times more in API credits than a standard single-prompt setup. 
@@ -71,6 +70,9 @@ If a single LLM writes both the character's internal thoughts and their external
 
 To prevent this, **Agent 6 (the Writer) is kept 100% blind to the raw thoughts of Agents 1-4.** It only receives the final, physical choreography and dialogue dictated by Agent 5. This strict firewall forces the AI to act like a real movie camera—describing only literal, physical reality and forcing the emotional subtext to be shown, not told.
 
+---
+
+## 🧠 How It Works Under the Hood (The Architecture)
 ```
 [ST Chat History] 
        │
