@@ -60,7 +60,7 @@ Here are just a few ways you can have fun with the Setting card:
 
 *   **The Master Timekeeper:** Because the Setting reads the internal DMN schedules of every character, you can prompt your Setting card to act as a scene-manager. Ask it to succinctly output the exact location and current activity of every character in the house at a given time based on their routines.
 *   **Psychological Mirroring:** You can instruct the Setting card to spawn weather, events or NPCs that deliberately reflect or disrupt the psychological states of the characters. If a character is secretly feeling guilty (hidden in their Neurochemical agent), the Setting can make the room feel claustrophobic or spawn a knock at the door to trigger their paranoia.
-*   **The Meta-Tracker:** You can format the Setting card to act as a UI overlay. Tell it to read all the hidden `<think>` blocks and output a clean, formatted summary of everyone's current emotional state and stress levels in a single message.
+*   **The Meta-Tracker:** You can format the Setting card to act as a UI overlay. Tell it to read all the hidden `<think>` blocks and output a clean, formatted summary of  plot points, everyone's current emotional states and stress levels in a single message.
 *   **The Dungeon Master:** Let the Setting throw random curveballs into the characters' carefully planned daily routines and watch their Executive agents scramble to adapt.
 
 The Setting agent uses a standard, fast LLM pass (`temp=0.85`), making it a perfect, highly creative sandbox. Build the card however you want and give it whatever rules you like.
