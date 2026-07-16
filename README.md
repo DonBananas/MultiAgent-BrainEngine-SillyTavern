@@ -48,6 +48,25 @@ This breaks the usual AI sycophancy. The characters don't exist just to cater to
 
 ---
 
+## 🌍 The "Setting" Bypass (Your Omniscient Sandbox)
+
+If you create a character card in SillyTavern named exactly **Setting**, the Python script will recognize it and automatically bypass the 6-agent biopsychosocial brain. 
+
+Instead of treating "Setting" like a human, the script treats it as an **Omniscient Narrator**. It takes the raw, unedited chat history—containing the hidden `<think>` blocks, schedules, and emotions of *every single character* in the chat—and feeds it directly to the Setting. 
+
+Because the Setting bypasses the anti-telepathy firewall, it knows everything. And because it runs entirely off the Character Card you build for it in SillyTavern, **you can customize it to do whatever you want.** 
+
+Here are just a few ways you can have fun with the Setting card:
+
+*   **The Master Timekeeper:** Because the Setting reads the internal DMN schedules of every character, you can prompt your Setting card to act as a scene-manager. Ask it to succinctly output the exact location and current activity of every character in the house at a given time based on their routines.
+*   **Psychological Mirroring:** You can instruct the Setting card to spawn weather, events, or NPCs that deliberately reflect or disrupt the psychological states of the characters. If a character is secretly feeling guilty (hidden in their Neurochemical agent), the Setting can make the room feel claustrophobic or spawn a knock at the door to trigger their paranoia.
+*   **The Meta-Tracker:** You can format the Setting card to act as a UI overlay. Tell it to read all the hidden `<think>` blocks and output a clean, formatted summary of everyone's current emotional state and stress levels in a single message.
+*   **The Dungeon Master:** Let the Setting throw random curveballs into the characters' carefully planned daily routines and watch their Executive agents scramble to adapt.
+
+The Setting agent uses a standard, fast LLM pass (`temp=0.85`), making it a perfect, highly creative sandbox. Build the card however you want, give it whatever rules you like, and watch it manipulate the environment using the characters' deepest secrets.
+
+---
+
 ## 💸 Why use 6 agents?
 
 Running six separate API calls per turn is expensive. If you are roleplaying with a long chat history, this architecture will cost you significantly more in API tokens than a standard single-prompt setup. 
@@ -137,3 +156,5 @@ While sending the reply back to SillyTavern, the server runs quick background ta
 
 ## Known issues
 If the API call is rejected for unsafe content by your chosen provider, the Agents will output  placeholders. With less moderated models,  this usually affect only  1 or 2 agents, dialogue is usually always generated. Still, this will  negatively affect the quality of the chat. More censored models may block more agents and dialogue.
+
+The script has been tested using SillyTavern default preset and extensions. Interactions with custom presets and extensions that affect thought and memory processing are unknown.
