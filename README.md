@@ -99,8 +99,4 @@ To prevent characters from reading each other's minds (Telepathy) and to stop th
 ---
 
 ## 🔄 Background Tasks (State Management)
-
-While Phase 4 is returning the text to SillyTavern, the script runs non-blocking background tasks:
-*   **Stateful Fallback Memory:** Saves the character's generated DMN schedules to a local `biopsychosocial_state.json` file. If the API ever glitches or censors its response, the parser automatically restores the last known schedule so the character never suffers amnesia.
-*   **Cognitive Fatigue:** Calculates the somatic stress of the turn and updates the character's cumulative fatigue level (0-100) for the next round.
-*   **Race-Condition Protection:** Utilizes thread-safe locking to prevent file corruption during multi-character group chats.
+While sending the reply back to SillyTavern, the server runs quick background tasks to update the character's conversational fatigue and save their active schedules. It also uses thread-safe locking to ensure multiple characters in a group chat never corrupt your local memory file.
