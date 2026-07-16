@@ -82,7 +82,7 @@ To prevent this, **Agent 6 (the Writer) is kept 100% blind to the thoughts of Ag
 
 ---
 
-## 🧠 How It Works Under the Hood (The Architecture)
+## 🧠 How It Works
 ```
 [ST Chat History] 
        │
