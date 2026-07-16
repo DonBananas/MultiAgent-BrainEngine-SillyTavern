@@ -76,8 +76,7 @@ By keeping the subconscious agents isolated, we force the AI to generate raw, un
 #### 4. Enforcing the "Show, Don't Tell" Firewall
 If a single LLM writes both the character's internal thoughts and their external dialogue in one pass, the thoughts will inevitably "bleed" into the dialogue. The character will start acting exactly like they feel, destroying any subtext or masking.
 
-To prevent this, **Agent 6 (the Writer) is kept 100% blind to the thoughts of Agents 1-4.** It only receives the final, physical choreography and dialogue dictated by Agent 5 (The Executive Functions). This strict firewall forces the AI to act like a real movie camera—describing only literal, physical reality and forcing the emotional subtext to be shown, not told.
-
+To prevent this, **Agent 6 (the Writer) is kept 100% blind to the thoughts of Agents 1-4.** It only receives the final, physical choreography and dialogue dictated by Agent 5 (The Executive Functions). This strict firewall forces the AI to act like a real human interlocutor  describing only literal, physical reality of the person they are itnreacting with, forcing the emotional subtext to be shown, not told as if through telepathy.
 ---
 
 ## 🧠 How It Works Under the Hood (The Architecture)
