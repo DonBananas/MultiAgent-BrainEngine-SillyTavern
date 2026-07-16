@@ -65,6 +65,7 @@ While Agents 2, 3, and 4 are all influenced by the Somatic core (A1), **they are
 In a standard single-prompt LLM, different cognitive domains contaminate each other because the AI is forced to write them in a single, continuous stream of text. 
 *   If the AI starts its thought process by writing about its daily schedule (DMN), those words mathematically bias its neural network, warping its subsequent process. 
 *   By separating these domains into isolated streams, the **DMN** can worry about its chores, the **Theory of Mind** can analyze social vulnerabilities, and the **Neurochemical Engine** can calculate ego and drives. They all feel the somatic tension (A1), but they process it in their own specialized domains without polluting one another.
+*   In a real brain, subconsicous thoughts involve different regions that act simultaneously, not sequentially.
 
 #### 3. Simulating real cognitive dissonance
 Because Agents 2, 3, and 4 process the scene independently, they often produce highly contradictory data. Your Theory of Mind might say *"the user is vulnerable and needs comfort,"* while your Neurochemical Engine says *"my pride is wounded and I want to strike back."*
