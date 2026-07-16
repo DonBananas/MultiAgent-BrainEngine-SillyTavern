@@ -44,6 +44,7 @@ This breaks the usual AI sycophancy. The characters don't exist just to cater to
     *   Find the **Reasoning** section and turn on **"Add to prompt"**.
     *   Set the **"Max number of thinking blocks to add"** to a high number (eg. 100). 
     *   *Why?* The Python backend is hardcoded to parse the last 3 thoughts of the active character. Setting this to a high value in SillyTavern allow the memory engine to function. The script will aumatically remove all words that don't belong to the preivous 3 thoughts of our specific character in the chat, so no worry about token consumption here.
+10. If Streaming is turned on on SillyTavern, you MUST turn it OFF . Otherwise You won't get the output. Open AI Response Configuration on Sillytavern (the three horizonal lines on the top bar) and uncheck Streaming.  
 
 ---
 
