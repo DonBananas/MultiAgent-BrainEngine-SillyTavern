@@ -2,7 +2,7 @@
 
 ### Stop roleplaying with puppets. Give them a mind and a life.
 
-If you’ve spent any time doing AI roleplay, you’ve probably noticed what I call the "puppet problem." Most characters exist in a total vacuum. They have zero agency, sitting passively in a blank room, waiting for you to type, and ready to agree with whatever you say. They don't have a complex inner life, and they certainly don't have a schedule. 
+If you’ve spent any time doing AI roleplay, you’ve probably noticed what I call the "puppet problem." Most characters exist in a total vacuum. They have zero agency, sitting passively in a blank room, waiting for you to type and ready to agree with whatever you say. They don't have a complex inner life and they certainly don't have a schedule. 
 
 I wanted to change that. 
 
@@ -21,7 +21,7 @@ I also wanted to cure the AI's tendency to wait around in a void. Through the De
 *   **A weekly calendar:** They know what their obligations are tomorrow, on Thursday, or over the weekend.
 *   **Mundane background noise:** Even during intense moments, their mind will flash to random daily stresses—cleaning a dirty paintbrush, mending a frayed ribbon, or worrying about a sibling.
 
-This breaks the usual AI sycophancy. The characters don't exist just to cater to you; they have a complex inner world, and they have somewhere to be. You are simply stepping into a scene in progress.
+This breaks the usual AI sycophancy. The characters don't exist just to cater to you; they have a complex inner world and they have somewhere to be. You are simply stepping into a scene in progress.
 
 ---
 
