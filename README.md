@@ -33,7 +33,7 @@ This breaks the usual AI sycophancy. The characters don't exist just to cater to
     ```bash
     pip install -r requirements.txt
     ```
-4.  Open `server.py` in a text editor and put your API Key, Model Name, and Provider URL at the top.
+4.  Open `server.py` in a text editor and put your API Key, Model Name, and Provider URL at the top where it says `INSERT_YOUR_...`.
 5.  To run the server: Double click `start_server.bat` (or run `python server.py` in your terminal).
 6.  Open SillyTavern. Go to the **API Connections** tab (the plug icon).
 7.  Select **Chat Completion** -> **Custom (OpenAI-compatible)**.
