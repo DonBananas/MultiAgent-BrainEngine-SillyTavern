@@ -159,4 +159,4 @@ While sending the reply back to SillyTavern, the server runs quick background ta
 
 *   The script has been tested using SillyTavern default preset and extensions. Interactions with custom presets and extensions that affect thought and memory processing are unknown.
 
-*   The script often doesn't work with **Kimi models.**
+*   The script often does **not work** with **Kimi models.**
