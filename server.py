@@ -1,3 +1,5 @@
+# --- START OF FILE server.py ---
+
 import asyncio
 import json
 import re
@@ -16,9 +18,9 @@ app = FastAPI()
 
 # --- MAIN SETTINGS (Required) ---
 # Used for Agent 5 (Decision Making) and Agent 6 (Writing)
-API_KEY = "INSERT_YOUR_API_KEY_HERE" 
-MODEL_NAME = "INSERT_YOUR_MODEL_NAME_HERE"      # e.g., "anthropic/claude-3.5-sonnet"
-BASE_URL = "INSERT_YOUR_PROVIDER_URL_HERE"      # e.g., "https://openrouter.ai/api/v1"
+API_KEY = "sk-B7PBTTwGVnyINOQRACgWt8dpxuhbywJTG5kTrSGRq00yjjSK8PagVybOg66lcLyc" 
+MODEL_NAME = "glm-5.2"      # e.g., "anthropic/claude-3.5-sonnet"
+BASE_URL = "https://opencode.ai/zen/go/v1"      # e.g., "https://openrouter.ai/api/v1"
 
 # --- ADVANCED: DUAL-PROVIDER SETUP (Optional, saves money) ---
 # Want to run the backend logic (Agents 1-4) on a cheap or free local model?
@@ -44,7 +46,7 @@ STATE_DB_FILE = "biopsychosocial_state.json"
 state_lock = threading.Lock()  # Unified lock to prevent background task collisions
 
 # =========================================================
-# BULLETPROOF JSON PARSING & STATE MANAGEMENT (FIXED LCOKS)
+# BULLETPROOF JSON PARSING & STATE MANAGEMENT
 # =========================================================
 def _load_raw_unlocked():
     """Internal helper: Reads the file without triggering locks"""
@@ -54,7 +56,7 @@ def _load_raw_unlocked():
                 return json.load(f)
         except json.JSONDecodeError:
             print("⚠️ STATE DB CORRUPTED! Preventing overwrite. Returning None.")
-            return None # Return None instead of {} to prevent wiping the database on crash
+            return None 
         except Exception as e:
             print(f"⚠️ STATE DB READ ERROR: {e}")
             return None
@@ -78,17 +80,16 @@ def get_current_state(character_name="default"):
         
         return states.get(character_name, {
             "character_name": character_name,
-            "cognitive_fatigue": 20,
             "last_known_dmn_daily": "08:00 AM - Wake up, 09:00 AM - 05:00 PM - Work.",
             "last_known_dmn_weekly": "Standard weekly routine."
         })
 
 def update_state_memory(char_name, daily_sched, weekly_sched):
-    with state_lock: # LOCK HELD FOR ENTIRE READ-MODIFY-WRITE
+    with state_lock: 
         states = _load_raw_unlocked()
-        if states is None: return # Abort if DB is currently corrupted
+        if states is None: return 
         
-        state = states.get(char_name, {"character_name": char_name, "cognitive_fatigue": 20})
+        state = states.get(char_name, {"character_name": char_name})
         
         default_daily = "08:00 AM - Wake up, 09:00 AM - 05:00 PM - Work."
         default_weekly = "Standard weekly routine."
@@ -275,7 +276,8 @@ AGENT_1_SOMATIC = """You are the Somatic Core (System 1). Evaluate the immediate
 {
   "valence": "Positive, Neutral, or Negative",
   "arousal_level": "5.5", 
-  "physical_symptoms": "Describe heart rate, tension, etc."
+  "dominance_level": "5.5",
+  "physical_symptoms": "Describe heart rate, tension, breathing, etc."
 }"""
 
 AGENT_2_NEURO_SCHEMA = """You are the Neurochemical & Schema Engine. Evaluate the character's long-term drives and core beliefs. Provide a highly descriptive, verbose psychological breakdown.
@@ -314,21 +316,22 @@ CONVERSATIONAL REALISM (SILENCE IS AN OPTION):
 
 CRITICAL RULES FOR HUMAN SUBTEXT (EQ) & VOLATILITY:
 - CONTRADICTION: Humans rarely state their true feelings. If they are hurt, they act cold. If they are scared, they act aggressive. 
-- PROXEMICS & PROPS: Since you can only choreograph macroscopic actions, use SPACE and OBJECTS to show emotion.
 - BEHAVIORAL VOLATILITY: Humans shift tactics. DO NOT repeat the exact same subtext strategy or physical choreography from previous turns. Keep them dynamic.
 
-RULES FOR ATTENTION:
+RULES FOR ATTENTION & AGGRESSION:
 - DMN LEAK: If Arousal is LOW (< 5.0), allow the DMN intrusive thought to distract you.
 - TUNNEL VISION: If Arousal is HIGH (> 6.5), strictly ignore the DMN/schedule. Focus entirely on the immediate threat or scene.
-- HIJACK: If Cognitive Fatigue is HIGH (> 70) OR Arousal is explosive (> 8.5), you suffer Ego Depletion. You snap, lash out, or surrender. 
+- FLIGHT OR SUBMISSION: If Arousal is explosive (> 8.5) AND Dominance is LOW (< 4.0), you retreat, shrink, yield space, or surrender.
+- FIGHT OR VIOLENCE: If Arousal is explosive (> 8.5) AND Dominance is HIGH (> 7.0), you become highly aggressive, intimidating, or physically violent.
 
-CRITICAL RULE FOR STAGE DIRECTIONS:
+CRITICAL RULE FOR STAGE DIRECTIONS (PROXEMICS & PROPS):
 - You MUST only choreograph macroscopic stage directions (e.g., Walks away, crosses arms, leans on the desk, slams a book).
+- If Dominance is HIGH, invade the user's space, loom over them, corner them, or handle objects aggressively/violently. 
+- If Dominance is LOW, put objects between you and the user, step back, or avert your gaze.
 - DO NOT choreograph biological micro-movements (e.g., breathing, swallowing, heartbeats, muscles clenching).
 
 Output strict JSON format:
 {
-  "hijack_occurred": false,
   "internal_motive": "What is their actual raw emotional desire right now?",
   "subtext_strategy": "How are they masking or weaponizing this feeling? (e.g., 'Using cold professionalism to hide hurt', 'Feigning ignorance to test the user').",
   "speech_intent": "What they will say, OR 'Silence / Action Only'.",
@@ -366,36 +369,6 @@ async def staggered_call(coro, delay_seconds):
     if delay_seconds > 0:
         await asyncio.sleep(delay_seconds)
     return await coro
-
-async def update_cognitive_load(char_name, arousal, valence):
-    print("🔄 [BACKGROUND] Updating Cognitive Fatigue...")
-    
-    def sync_update_fatigue():
-        with state_lock: # LOCK HELD FOR ENTIRE READ-MODIFY-WRITE
-            states = _load_raw_unlocked()
-            if states is None: return None # Abort if DB is corrupted
-            
-            state = states.get(char_name, {"character_name": char_name, "cognitive_fatigue": 20})
-            fatigue = state.get("cognitive_fatigue", 20)
-            
-            if arousal >= 7.5 or valence.lower() == "negative":
-                fatigue += 15
-            elif arousal <= 4.0 and valence.lower() == "positive":
-                fatigue -= 20
-            else:
-                fatigue -= 5 
-                
-            fatigue = max(0, min(100, fatigue))
-            state["cognitive_fatigue"] = fatigue
-            
-            states[char_name] = state
-            _save_raw_unlocked(states)
-            return fatigue
-            
-    # Run the locked sync function safely in the background thread
-    final_fatigue = await asyncio.to_thread(sync_update_fatigue)
-    if final_fatigue is not None:
-        print(f"✅ [BACKGROUND] {char_name} Fatigue is now {final_fatigue}/100")
 
 @app.get("/v1/models")
 async def get_models():
@@ -468,9 +441,6 @@ async def chat_completions(request: Request, background_tasks: BackgroundTasks):
     # =========================================================
     messages_mind, messages_synth = prepare_message_streams(raw_messages, char_name)
 
-    state = get_current_state(char_name)
-    fatigue = state.get("cognitive_fatigue", 20)
-        
     # =========================================================
     # PHASE 1: SUBCONSCIOUS (STAGGERED CONCURRENT)
     # =========================================================
@@ -478,17 +448,22 @@ async def chat_completions(request: Request, background_tasks: BackgroundTasks):
     
     task_1_messages = build_agent_messages(messages_mind, AGENT_1_SOMATIC, is_json=True)
     res_1 = await async_llm_call(full_messages=task_1_messages, temp=agent_temp)
-    a1_data = parse_or_fallback(res_1, {"valence": "Neutral", "arousal_level": "5.0", "physical_symptoms": "stillness"}, "A1_Somatic", char_name)
+    a1_data = parse_or_fallback(res_1, {"valence": "Neutral", "arousal_level": "5.0", "dominance_level": "5.0", "physical_symptoms": "stillness"}, "A1_Somatic", char_name)
     
     try:
         arousal = float(a1_data.get("arousal_level", "5.0"))
     except:
         arousal = 5.0
         
+    try:
+        dominance = float(a1_data.get("dominance_level", "5.0"))
+    except:
+        dominance = 5.0
+        
     valence = safe_get(a1_data, "valence", "Neutral")
     symptoms = safe_get(a1_data, "physical_symptoms", "stillness")
 
-    body_context = f"CURRENT BODILY STATE: Arousal is {arousal}/10. Valence is {valence}. Symptoms: {symptoms}. Let this physiological state heavily influence your analysis."
+    body_context = f"CURRENT BODILY STATE: Arousal is {arousal}/10. Dominance is {dominance}/10. Valence is {valence}. Symptoms: {symptoms}. Let this physiological state heavily influence your analysis."
 
     msg_2 = build_agent_messages(messages_mind, AGENT_2_NEURO_SCHEMA, additional_context=body_context, is_json=True)
     msg_3 = build_agent_messages(messages_mind, AGENT_3_TOM, additional_context=body_context, is_json=True)
@@ -543,7 +518,7 @@ async def chat_completions(request: Request, background_tasks: BackgroundTasks):
     # =========================================================
     executive_context = f"""
     [PHASE 1 SUBCONSCIOUS DATA]
-    - Somatic State: Arousal {arousal}/10, Valence: {valence}. Symptoms: {symptoms}
+    - Somatic State: Arousal {arousal}/10, Dominance {dominance}/10, Valence: {valence}. Symptoms: {symptoms}
     - Neurochemical Drives: Dopamine: {dopamine} | Serotonin: {serotonin} | Oxytocin: {oxytocin}
     - Core Emotion: {core_emotion}
     - Active Schema: {schema_trigger}
@@ -551,15 +526,12 @@ async def chat_completions(request: Request, background_tasks: BackgroundTasks):
     - DMN Intrusive Thought: {dmn_thought}
     - DMN Today's Schedule: {dmn_daily_schedule}
     - DMN Weekly Routine: {dmn_weekly_routine}
-    - COGNITIVE FATIGUE: {fatigue}/100.
     """
     
     msg_5 = build_agent_messages(messages_mind, AGENT_5_EXECUTIVE, additional_context=executive_context, is_json=True)
-    # MODIFICATION: Added is_writer=True to route Agent 5 to the main/expensive provider
     res_5 = await async_llm_call(full_messages=msg_5, temp=agent_temp, pres_pen=0.4, is_writer=True)
     
     a5_data = parse_or_fallback(res_5, {
-        "hijack_occurred": False, 
         "internal_motive": "Proceed logically.",
         "subtext_strategy": "Direct honesty.",
         "speech_intent": "Respond to user.",
@@ -567,7 +539,6 @@ async def chat_completions(request: Request, background_tasks: BackgroundTasks):
         "physical_choreography": "Maintain normal posture."
     }, "A5_Exec", char_name)
     
-    hijack = a5_data.get("hijack_occurred", False)
     internal_motive = safe_get(a5_data, "internal_motive", "Proceed logically.")
     subtext_strategy = safe_get(a5_data, "subtext_strategy", "Direct honesty.")
     speech_intent = safe_get(a5_data, "speech_intent", "Respond to user.")
@@ -575,9 +546,9 @@ async def chat_completions(request: Request, background_tasks: BackgroundTasks):
     physical_choreography = safe_get(a5_data, "physical_choreography", "Maintain normal posture.")
 
     print("\n" + "="*75)
-    print(f"🧠 BIOPSYCHOSOCIAL HIERARCHY | FATIGUE: {fatigue}/100 | CHAR: {char_name}")
+    print(f"🧠 BIOPSYCHOSOCIAL HIERARCHY | CHAR: {char_name}")
     print("="*75)
-    print(f"🩸 A1 (Somatic): {valence} | Arousal {arousal}/10 | {symptoms}")
+    print(f"🩸 A1 (Somatic): {valence} | Arousal {arousal}/10 | Dominance {dominance}/10 | {symptoms}")
     print(f"🧪 A2 (Neuro)  : Emotion [{core_emotion}] | Schema [{schema_trigger[:40]}...]")
     print(f"👁️ A3 (ToM)    : Sees User Dynamic [{tom_dynamic[:40]}...] | Subtext [{tom_subtext[:40]}...]")
     print(f"🌫️ A4 (DMN)    : Thought -> {dmn_thought[:60]}...")
@@ -612,10 +583,7 @@ async def chat_completions(request: Request, background_tasks: BackgroundTasks):
         is_writer=True 
     )
     
-    thought_block = f"<think>\n🩸 Somatic: {valence}, Arousal {arousal}/10\n🧪 Neuro: Emotion [{core_emotion}] | Schema [{schema_trigger}]\n👁️ ToM: Intent [{tom_intent}] | User Subtext [{tom_subtext}]\n🌫️ DMN: {dmn_thought} | Today: {dmn_daily_schedule} | Week: {dmn_weekly_routine}\n⚖️ Exec (Fatigue {fatigue}): Motive [{internal_motive}] | Strategy [{subtext_strategy}]\n🎬 Directing: Speech [{speech_intent}] | Choreo [{physical_choreography}]\n</think>\n\n"
-    
-    # FastAPI Background task 2: Update fatigue
-    background_tasks.add_task(update_cognitive_load, char_name, arousal, valence)
+    thought_block = f"<think>\n🩸 Somatic: {valence}, Arousal {arousal}/10, Dominance {dominance}/10\n🧪 Neuro: Emotion [{core_emotion}] | Schema [{schema_trigger}]\n👁️ ToM: Intent [{tom_intent}] | User Subtext [{tom_subtext}]\n🌫️ DMN: {dmn_thought} | Today: {dmn_daily_schedule} | Week: {dmn_weekly_routine}\n⚖️ Exec: Motive [{internal_motive}] | Strategy [{subtext_strategy}]\n🎬 Directing: Speech [{speech_intent}] | Choreo [{physical_choreography}]\n</think>\n\n"
     
     return {
         "id": "chatcmpl-biopsych-brain",
