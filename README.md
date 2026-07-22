@@ -11,7 +11,7 @@ t
 
 ## New in version 2 — the quick version
 
-Version 2 builds on the [original MultiAgent BrainEngine](https://github.com/DonBananas/MultiAgent-BrainEngine-SillyTavern) by DonBananas. The 6-agent brain is preserved intact — and finally gets what it needed:
+Version 2 builds on the [original MultiAgent BrainEngine](https://github.com/DonBananas/MultiAgent-BrainEngine-SillyTavern/releases/tag/v1.0) by DonBananas. The 6-agent brain is preserved intact — and finally gets what it needed:
 
 - 📖 **Long-term memory** — every character keeps a private diary: important moments are remembered, trivial ones fade, the right memory resurfaces exactly when something reminds them of it, and old pages compress into a life story
 - 🌍 **Scene awareness** — characters know where they are, what time it is, and where every object is
