@@ -143,7 +143,7 @@ The first six agents run while you wait and produce the reply. The last two run 
 
 ### Requirements
 
-- **Windows** (the `.bat` launchers) — Linux/macOS note below
+- **Windows** (for Linux/macOS note below)
 - **Python 3.10+** — during installation, tick **"Add Python to PATH"**
 - **SillyTavern**
 - An **OpenAI-compatible API key** — OpenRouter, any compatible provider, or a local model server (LM Studio, etc.)
