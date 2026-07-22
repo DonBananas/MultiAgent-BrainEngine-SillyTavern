@@ -217,8 +217,6 @@ Depending on your API provider, characters may take a long time (1-3 minutes) be
 ---
 
 ## Credits & thanks
-
-- Built on the [MultiAgent BrainEngine for SillyTavern](https://github.com/DonBananas/MultiAgent-BrainEngine-SillyTavern) by **DonBananas** — the 6-agent biopsychosocial hierarchy, the anti-telepathy dual streams, and the Setting bypass are his design.
 - The memory system follows the research line of modern agent-memory work: episodic memory streams with reflection and salience-based retrieval (Park et al., *Generative Agents*, 2023; Packer et al., *MemGPT*, 2023), hybrid retrieval with Reciprocal Rank Fusion (Cormack et al., 2009) and BM25, diversity re-ranking with Maximal Marginal Relevance (Carbonell & Goldstein, 1998), Ebbinghaus-style forgetting (1885), and source monitoring for memory provenance (Johnson et al., 1993).
 
 ### Special thanks
