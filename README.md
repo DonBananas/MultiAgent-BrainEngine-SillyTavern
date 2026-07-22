@@ -211,6 +211,11 @@ Your API keys and diaries live only on your machine, in `engine/config.json` and
 
 ---
 
+## Known issues
+Characters may take a long time (2-3 minutes) before generating an answer due to the multiple API calls required for the agents.
+
+---
+
 ## Credits & thanks
 
 - Built on the [MultiAgent BrainEngine for SillyTavern](https://github.com/DonBananas/MultiAgent-BrainEngine-SillyTavern) by **DonBananas** — the 6-agent biopsychosocial hierarchy, the anti-telepathy dual streams, and the Setting bypass are his design.
