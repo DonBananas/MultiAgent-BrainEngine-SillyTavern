@@ -212,7 +212,7 @@ Your API keys and diaries live only on your machine, in `engine/config.json` and
 ---
 
 ## Known issues
-Characters may take a long time (2-3 minutes) before generating an answer due to the multiple API calls required for the agents.
+Depending on your API provider, characters may take a long time (1-3 minutes) before generating an answer due to the multiple API calls required for the agents.
 
 ---
 
