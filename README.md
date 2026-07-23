@@ -169,7 +169,7 @@ The first six agents run while you wait and produce the reply. The last two run 
    - Set **"Max number of thinking blocks to add"** high (e.g. **100**).
    - *Why:* after every reply, SillyTavern tucks the character's hidden thoughts away; this setting hands them back to the engine, which is how the character keeps the thread of its inner voice. Without it the engine still runs, but that continuity is lost. (No token worry — the engine keeps only the character's own last three thoughts and erases the rest.)
 
-6. **Chat.** Open `http://127.0.0.1:8001/diary` anytime to watch the minds at work.
+6. **Chat and enjoy.** NOTICE: Responses may take significnatly longer to generate, do not worry if it happens. 
 
 **Linux / macOS:** run `pip install -r engine/requirements.txt`, then `python engine/launcher.py`.
 
